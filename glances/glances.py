@@ -3433,6 +3433,7 @@ def main():
     diskio_tag = True
     network_tag = True
     network_bytepersec_tag = False
+    sensors_tag = False
     html_tag = False
     csv_tag = False
     client_tag = False
