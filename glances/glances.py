@@ -3378,6 +3378,7 @@ def printSyntax():
     print(_("\t-C file\t\tPath to the configuration file"))
     print(_("\t-d\t\tDisable disk I/O module"))
     print(_("\t-e\t\tEnable the sensors module (Linux-only)"))
+    print(_("\t-g\t\tDisable the sensors module"))
     print(_("\t-f file\t\tSet the output folder (HTML) or file (CSV)"))
     print(_("\t-h\t\tDisplay the syntax and exit"))
     print(_("\t-m\t\tDisable mount module"))
@@ -3432,7 +3433,6 @@ def main():
     diskio_tag = True
     network_tag = True
     network_bytepersec_tag = False
-    sensors_tag = False
     html_tag = False
     csv_tag = False
     client_tag = False
@@ -3460,12 +3460,16 @@ def main():
     username = "glances"
     password = ""
 
+    # Default sensors to on if is_Linux and sensors_lib_tag is True 
+    if is_Linux and sensors_lib_tag:
+        sensors_tag = True
+
     # Manage args
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "B:bdemnho:f:t:vsc:p:C:P:z",
+        opts, args = getopt.getopt(sys.argv[1:], "B:bdegmnho:f:t:vsc:p:C:P:z",
                                    ["bind", "bytepersec", "diskio", "mount",
-                                    "sensors", "netrate", "help", "output",
-                                    "file", "time", "version", "server",
+                                    "sensors", "nosensors", "netrate", "help", 
+                                    "output", "file", "time", "version", "server",
                                     "client", "port", "config", "password",
                                     "nobold"])
     except getopt.GetoptError as err:
@@ -3521,6 +3525,8 @@ def main():
                     sensors_tag = True
             else:
                 print(_("Error: Sensors module is only available on Linux"))
+        elif opt in ("-g", "--nosensors"):
+            sensors_tag = False
         elif opt in ("-f", "--file"):
             output_file = arg
             output_folder = arg
